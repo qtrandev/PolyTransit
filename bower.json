@@ -1,0 +1,20 @@
+{
+  "name": "PolyTransit",
+  "version": "0.0.0",
+  "authors": [
+    "Quyen Tran <qtrandev@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#1.0.0",
+    "leaflet-map": "~1.1.0",
+    "iron-ajax": "PolymerElements/iron-ajax#~1.0.4"
+  }
+}

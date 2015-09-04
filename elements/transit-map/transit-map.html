@@ -1,0 +1,103 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/leaflet-map/leaflet-map.html">
+<link rel="import" href="../../bower_components/leaflet-map/leaflet-marker.html">
+<link rel="import" href="../../bower_components/leaflet-map/leaflet-popup.html">
+<link rel="import" href="../../bower_components/leaflet-map/leaflet-layer.html">
+<dom-module id="transit-map">
+  <template>
+    <style>
+      leaflet-map {
+        height: 600px;
+      }
+    </style>
+    <leaflet-map fit-to-markers latitude="26.023679" longitude="-80.143186" zoom="10">
+      <leaflet-tilelayer url="[[getTileLayerAddress()]]"></leaflet-tilelayer>
+      <iron-ajax
+        auto
+        url="http://miami-transit-api.herokuapp.com/api/Buses.json"
+        handle-as="json"
+        on-response="handleResponse"
+        debounce-duration="300">
+      </iron-ajax>
+      <iron-ajax
+        auto
+        url="http://miami-transit-api.herokuapp.com/api/Trains.json"
+        handle-as="json"
+        on-response="handleTrainsResponse"
+        debounce-duration="300">
+      </iron-ajax>
+      <leaflet-icon
+        id="busIcon"
+        icon-url="http://codeformiami.org/LeafletTransit/icons/icon-Bus-Tracker.png"
+        icon-anchor-x="22"
+        icon-anchor-y="22">
+      </leaflet-icon>
+      <leaflet-icon
+        id="trainIcon"
+        icon-url="http://codeformiami.org/LeafletTransit/icons/icon-Rail-Tracker.png"
+        icon-anchor-x="22"
+        icon-anchor-y="22">
+      </leaflet-icon>
+      <template is="dom-repeat" items="{{buses}}" as="bus">
+        <leaflet-marker
+          latitude="[[bus.Latitude]]"
+          longitude="[[bus.Longitude]]"
+          title="[[bus.BusID]]"
+          icon="busIcon">
+          <b><span>[[bus.RouteID]]</span> <span>[[bus.ServiceDirection]]</span> - <span>[[bus.BusID]]</span> <span>[[bus.BusName]]</span></b>
+        </leaflet-marker>
+      </template>
+      <template is="dom-repeat" items="{{trains}}" as="train">
+        <leaflet-marker
+          latitude="[[train.Latitude]]"
+          longitude="[[train.Longitude]]"
+          title="[[train.TrainID]]"
+          icon="trainIcon">
+          <b><span>[[train.LineID]]</span> <span>[[train.Service]]</span> -  <span>[[train.TrainID]]</span></b>
+        </leaflet-marker>
+      </template>
+    </leaflet-map>
+  </template>
+
+  <script>
+    Polymer({
+      is: "transit-map",
+      properties: {
+        buses: {
+          type: Array,
+          value: []
+        },
+        trains: {
+          type: Array,
+          value: []
+        }
+      },
+      ready: function() {
+        //init();
+      },
+      handleResponse: function(e) {
+        var object = e.detail.response.RecordSet.Record;
+        if (object !== null) {
+          this.buses = object;
+        }
+        else  {
+          this.buses = [];
+        }
+      },
+      handleTrainsResponse: function(e) {
+        var object = e.detail.response.RecordSet.Record;
+        if (object !== null) {
+          this.trains = object;
+        }
+        else  {
+          this.trains = [];
+        }
+      },
+      getTileLayerAddress: function() {
+        var accessToken = 'pk.eyJ1IjoicXRyYW5kZXYiLCJhIjoiSDF2cGNjZyJ9.D1ybOKe77AQDPHkxCCEpJQ';
+        return 'https://{s}.tiles.mapbox.com/v4/qtrandev.lc0i743k/{z}/{x}/{y}.png?access_token=' + accessToken;
+      }
+    });
+  </script>
+</dom-module>
