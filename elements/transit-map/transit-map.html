@@ -77,18 +77,18 @@
         //init();
       },
       handleResponse: function(e) {
-        var object = e.detail.response.RecordSet.Record;
+        var object = e.detail.response.RecordSet;
         if (object !== null) {
-          this.buses = object;
+          this.buses = object.Record;
         }
         else  {
           this.buses = [];
         }
       },
       handleTrainsResponse: function(e) {
-        var object = e.detail.response.RecordSet.Record;
+        var object = e.detail.response.RecordSet;
         if (object !== null) {
-          this.trains = object;
+          this.trains = object.Record;
         }
         else  {
           this.trains = [];

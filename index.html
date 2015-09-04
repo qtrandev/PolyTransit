@@ -8,9 +8,35 @@
     <link rel="stylesheet" href="styles/styles.css">
   </head>
   <body>
-    <template id="transit" is="dom-bind">
-      <h2>Miami Transit</h2>
-      <transit-map></transit-map>
-    </template>
+    <paper-drawer-panel id="drawerPanel">
+      <div drawer>
+        <paper-toolbar id="drawerToolbar">
+        </paper-toolbar>
+        <paper-menu attr-for-selected="data-route" selected="{{route}}">
+          <a data-route="home" href="/" paper-drawer-toggle>
+            <iron-icon icon="maps:directions-transit"></iron-icon>
+            <span>Map</span>
+          </a>
+          <a data-route="routes" href="/routes" paper-drawer-toggle>
+            <iron-icon icon="list"></iron-icon>
+            <span>Table</span>
+          </a>
+          <a data-route="about" href="/about" paper-drawer-toggle>
+            <iron-icon icon="info-outline"></iron-icon>
+            <span>About</span>
+          </a>
+        </paper-menu>
+      </div>
+      <div main>
+        <paper-toolbar id="topBar">
+          <paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
+          <iron-icon src="images/logo.png"></iron-icon>
+          <div class="title">Miami Transit</div>
+        </paper-toolbar>
+        <template id="transit" is="dom-bind">
+          <transit-map></transit-map>
+        </template>
+      </div>
+    </paper-drawer-panel>
   </body>
 </html>
