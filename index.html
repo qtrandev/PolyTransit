@@ -12,20 +12,28 @@
       <div drawer>
         <paper-toolbar id="drawerToolbar">
         </paper-toolbar>
-        <paper-menu attr-for-selected="data-route" selected="{{route}}">
-          <a data-route="home" href="/" paper-drawer-toggle>
-            <iron-icon icon="maps:directions-transit"></iron-icon>
-            <span>Map</span>
-          </a>
-          <a data-route="routes" href="/routes" paper-drawer-toggle>
-            <iron-icon icon="list"></iron-icon>
-            <span>Table</span>
-          </a>
-          <a data-route="about" href="/about" paper-drawer-toggle>
-            <iron-icon icon="info-outline"></iron-icon>
-            <span>About</span>
-          </a>
-        </paper-menu>
+        <more-routing-config driver="hash"></more-routing-config>
+        <more-route name="home" path="/"></more-route>
+        <more-route name="about" path="/about"></more-route>
+        <more-route name="routes" path="/routes"></more-route>
+        <template id="mainmenu" is="dom-bind">
+          <more-route-selector>
+            <paper-menu>
+              <a route="home" href="#!/" paper-drawer-toggle>
+                <iron-icon icon="maps:directions-transit"></iron-icon>
+                <span>Map</span>
+              </a>
+              <a route="routes" href="#!/routes" paper-drawer-toggle>
+                <iron-icon icon="list"></iron-icon>
+                <span>Routes</span>
+              </a>
+              <a route="about" href="#!/about" paper-drawer-toggle>
+                <iron-icon icon="info-outline"></iron-icon>
+                <span>About</span>
+              </a>
+            </paper-menu>
+          </more-route-selector>
+        </template>
       </div>
       <div main>
         <paper-toolbar id="topBar">
@@ -34,7 +42,22 @@
           <div class="title">Miami Transit</div>
         </paper-toolbar>
         <template id="transit" is="dom-bind">
-          <transit-map></transit-map>
+          <more-route-selector selectedParams="{{params}}">
+            <iron-pages>
+              <section route="home">
+                <h2>Map</h2>
+                <transit-map></transit-map>
+              </section>
+              <section route="routes">
+                <h2>Routes</h2>
+                Routes table
+              </section>
+              <section route="about">
+                <h2>About</h2>
+                About section
+              </section>
+            </iron-pages>
+          </more-route-selector>
         </template>
       </div>
     </paper-drawer-panel>
