@@ -19,18 +19,18 @@
         <template id="mainmenu" is="dom-bind">
           <more-route-selector>
             <paper-menu>
-              <a route="home" href="#!/" paper-drawer-toggle>
+              <paper-item route="home" paper-drawer-toggle>
                 <iron-icon icon="maps:directions-transit"></iron-icon>
                 <span>Map</span>
-              </a>
-              <a route="routes" href="#!/routes" paper-drawer-toggle>
+              </paper-item>
+              <paper-item route="routes" paper-drawer-toggle>
                 <iron-icon icon="list"></iron-icon>
                 <span>Routes</span>
-              </a>
-              <a route="about" href="#!/about" paper-drawer-toggle>
+              </paper-item>
+              <paper-item route="about" paper-drawer-toggle>
                 <iron-icon icon="info-outline"></iron-icon>
                 <span>About</span>
-              </a>
+              </paper-item>
             </paper-menu>
           </more-route-selector>
         </template>
