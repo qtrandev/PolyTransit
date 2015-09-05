@@ -9,7 +9,7 @@
   </head>
   <body>
     <paper-drawer-panel id="drawerPanel">
-      <div drawer>
+      <paper-scroll-header-panel drawer>
         <paper-toolbar id="drawerToolbar">
         </paper-toolbar>
         <more-routing-config driver="hash"></more-routing-config>
@@ -34,8 +34,8 @@
             </paper-menu>
           </more-route-selector>
         </template>
-      </div>
-      <div main>
+      </paper-scroll-header-panel>
+      <paper-scroll-header-panel main>
         <paper-toolbar id="topBar">
           <paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
           <iron-icon src="images/logo.png"></iron-icon>
@@ -59,7 +59,7 @@
             </iron-pages>
           </more-route-selector>
         </template>
-      </div>
+      </paper-scroll-header-panel>
     </paper-drawer-panel>
   </body>
 </html>
