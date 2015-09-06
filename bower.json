@@ -20,10 +20,9 @@
     "paper-toolbar": "PolymerElements/paper-toolbar#~1.0.4",
     "paper-menu": "PolymerElements/paper-menu#~1.1.0",
     "paper-icon-button": "PolymerElements/paper-icon-button#~1.0.3",
-    "iron-image": "PolymerElements/iron-image#~1.0.2",
     "more-routing": "Polymore/more-routing#~1.0.0",
     "iron-pages": "PolymerElements/iron-pages#~1.0.3",
-    "paper-scroll-header-panel": "PolymerElements/paper-scroll-header-panel#~1.0.8",
-    "paper-item": "PolymerElements/paper-item#~1.0.2"
+    "paper-item": "PolymerElements/paper-item#~1.0.2",
+    "paper-header-panel": "PolymerElements/paper-header-panel#~1.0.5"
   }
 }

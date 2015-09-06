@@ -1,0 +1,56 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<dom-module id="route-table">
+  <template>
+    <iron-ajax
+      auto
+      url="http://miami-transit-api.herokuapp.com/api/BusRoutes.json"
+      handle-as="json"
+      on-response="handleRouteResponse"
+      debounce-duration="300">
+    </iron-ajax>
+    <div id="busroutes" class="tab-pane fade">
+      Bus Routes: <span>{{routes.length}}</span>
+      <div id="busroutesTable">
+        <table>
+          <tr>
+            <th>Route ID</th>
+            <th>Route Alias</th>
+            <th>Route Description</th>
+            <th>Route Color</th>
+          </tr>
+          <template is="dom-repeat" items="{{routes}}" as="route">
+            <tr>
+              <td>{{route.RouteID}}</td>
+              <td>{{route.RouteAliasLong}}</td>
+              <td>{{route.RouteDescription}}</td>
+              <td>{{route.RouteColor}}</td>
+            </tr>
+          </template>
+        </table>
+      </div>
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: "route-table",
+      properties: {
+        routes: {
+          type: Array,
+          value: []
+        }
+      },
+      handleRouteResponse: function(e) {
+        var object = e.detail.response.RecordSet;
+        if (object !== null) {
+          this.routes = object.Record;
+        }
+        else  {
+          this.routes = [];
+        }
+      }
+    });
+  </script>
+</dom-module>

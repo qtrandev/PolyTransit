@@ -9,7 +9,7 @@
   </head>
   <body>
     <paper-drawer-panel id="drawerPanel">
-      <paper-scroll-header-panel drawer>
+      <paper-header-panel drawer>
         <paper-toolbar id="drawerToolbar">
         </paper-toolbar>
         <more-routing-config driver="hash"></more-routing-config>
@@ -34,13 +34,14 @@
             </paper-menu>
           </more-route-selector>
         </template>
-      </paper-scroll-header-panel>
-      <paper-scroll-header-panel main>
+      </paper-header-panel>
+      <paper-header-panel main>
         <paper-toolbar id="topBar">
           <paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
           <iron-icon src="images/logo.png"></iron-icon>
           <div class="title">Miami Transit</div>
         </paper-toolbar>
+        <div class="content">
         <template id="transit" is="dom-bind">
           <more-route-selector selectedParams="{{params}}">
             <iron-pages>
@@ -50,7 +51,7 @@
               </section>
               <section route="routes">
                 <h2>Routes</h2>
-                Routes table
+                <route-table></route-table>
               </section>
               <section route="about">
                 <h2>About</h2>
@@ -59,7 +60,8 @@
             </iron-pages>
           </more-route-selector>
         </template>
-      </paper-scroll-header-panel>
+        </div>
+      </paper-header-panel>
     </paper-drawer-panel>
   </body>
 </html>
