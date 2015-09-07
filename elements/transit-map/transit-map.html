@@ -27,6 +27,16 @@
         on-response="handleTrainsResponse"
         debounce-duration="300">
       </iron-ajax>
+      <!--Not working - either need to make POST request or iron-ajax not good
+      <iron-ajax
+        auto
+        url="http://rest.tsoapi.com/MappingController/GetUnitFromRouteAntibunching"
+        params='{ "tkn": "miamibeachtkn", "geofencesid": "40756", "lan": "en" }'
+        handle-as="json"
+        on-response="handleMiamiBeachTrolleysResponse"
+        debounce-duration="300">
+      </iron-ajax>
+      -->
       <leaflet-icon
         id="busIcon"
         icon-url="http://codeformiami.org/LeafletTransit/icons/icon-Bus-Tracker.png"
@@ -36,6 +46,12 @@
       <leaflet-icon
         id="trainIcon"
         icon-url="http://codeformiami.org/LeafletTransit/icons/icon-Rail-Tracker.png"
+        icon-anchor-x="22"
+        icon-anchor-y="22">
+      </leaflet-icon>
+      <leaflet-icon
+        id="miamibeachtrolleyIcon"
+        icon-url="http://codeformiami.org/LeafletTransit/icons/miamibeach-bus.png"
         icon-anchor-x="22"
         icon-anchor-y="22">
       </leaflet-icon>
@@ -57,6 +73,15 @@
           <b><span>[[train.LineID]]</span> <span>[[train.Service]]</span> -  <span>[[train.TrainID]]</span></b>
         </leaflet-marker>
       </template>
+      <template is="dom-repeat" items="{{miamibeachtrolleys}}" as="trolley">
+        <leaflet-marker
+          latitude="[[trolley.Latitude]]"
+          longitude="[[trolley.Longitude]]"
+          title="[[trolley.MarkerID]]"
+          icon="miamiBeachTrolleyIcon">
+          <b><span>[[trolley.MarkerID]]</span> <span>[[trolley.Direction]]</span> -  <span>[[trolley.Heading]]</span></b>
+        </leaflet-marker>
+      </template>
     </leaflet-map>
   </template>
 
@@ -69,6 +94,10 @@
           value: []
         },
         trains: {
+          type: Array,
+          value: []
+        },
+        miamibeachtrolleys: {
           type: Array,
           value: []
         }
@@ -92,6 +121,15 @@
         }
         else  {
           this.trains = [];
+        }
+      },
+      handleMiamiBeachTrolleysResponse: function(e) {
+        var object = e.detail.response.Units;
+        if (object !== null) {
+          this.miamibeachtrolleys = object;
+        }
+        else  {
+          this.miamibeachtrolleys = [];
         }
       },
       getTileLayerAddress: function() {
