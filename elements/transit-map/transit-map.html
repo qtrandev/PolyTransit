@@ -17,7 +17,7 @@
         auto
         url="http://miami-transit-api.herokuapp.com/api/Buses.json"
         handle-as="json"
-        on-response="handlBusesResponse"
+        on-response="handleBusesResponse"
         debounce-duration="300">
       </iron-ajax>
       <iron-ajax
@@ -76,7 +76,7 @@
       ready: function() {
         //init();
       },
-      handlBusesResponse: function(e) {
+      handleBusesResponse: function(e) {
         var object = e.detail.response.RecordSet;
         if (object !== null) {
           this.buses = object.Record;
