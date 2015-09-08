@@ -16,6 +16,7 @@
         <more-route name="home" path="/"></more-route>
         <more-route name="about" path="/about"></more-route>
         <more-route name="routes" path="/routes"></more-route>
+        <more-route name="routeview" path="/routes/:routeId"></more-route>
         <template id="mainmenu" is="dom-bind">
           <more-route-selector>
             <paper-menu>
@@ -62,6 +63,10 @@
               <section route="routes">
                 <h2>Routes</h2>
                 <route-table></route-table>
+              </section>
+              <section route="routeview">
+                <h2>Route</h2>
+                <route-view></route-view>
               </section>
               <section route="about">
                 <h2>About</h2>

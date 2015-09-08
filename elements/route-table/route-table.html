@@ -1,6 +1,12 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <dom-module id="route-table">
+  <style>
+    paper-button {
+      margin: 0 10px;
+    }
+  </style>
   <template>
     <iron-ajax
       auto
@@ -21,7 +27,7 @@
           </tr>
           <template is="dom-repeat" items="{{routes}}" as="route">
             <tr>
-              <td>{{route.RouteID}}</td>
+              <td><paper-button onclick="routeClicked(this)" raised  id="{{route.RouteID}}">{{route.RouteID}}</paper-button></td>
               <td>{{route.RouteAliasLong}}</td>
               <td>{{route.RouteDescription}}</td>
               <td>{{route.RouteColor}}</td>
@@ -52,5 +58,8 @@
         }
       }
     });
+    function routeClicked(e) {
+      window.location.href = window.location.href+'/'+(e.id);
+    }
   </script>
 </dom-module>

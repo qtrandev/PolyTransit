@@ -1,0 +1,64 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/leaflet-map/leaflet-map.html">
+<link rel="import" href="../../bower_components/leaflet-map/leaflet-marker.html">
+<link rel="import" href="../../bower_components/leaflet-map/leaflet-popup.html">
+<link rel="import" href="../../bower_components/leaflet-map/leaflet-layer.html">
+<link rel="import" href="../../bower_components/more-routing/more-routing.html">
+<dom-module id="route-view">
+  <style>
+    leaflet-map {
+      height = 300px;
+    }
+  </style>
+  <template>
+    <more-route context name="routeview" params="{{params}}"></more-route>
+    <iron-ajax
+      auto
+      url="http://miami-transit-api.herokuapp.com/api/BusRouteStops.json"
+      handle-as="json"
+      params={{ajaxparams}}
+      on-response="handleRouteResponse"
+      debounce-duration="300">
+    </iron-ajax>
+    <leaflet-map fit-to-markers latitude="26.023679" longitude="-80.143186" zoom="10">
+      <template is="dom-repeat" items="{{stops}}" as="busStop">
+        <leaflet-marker
+          latitude="[[busStop.Latitude]]"
+          longitude="[[busStop.Longitude]]"
+          title="[[busStop.StopName]]"
+          icon="busIcon">
+          <b><span>[[busStop.Sequence]]</span> - <span>[[busStop.StopID]]</span>   <span>[[busStop.StopName]]</span></b>
+        </leaflet-marker>
+      </template>
+    </leaflet-map>
+  </template>
+
+  <script>
+    Polymer({
+      is: "route-view",
+      properties: {
+        ajaxparams: {
+          type: Object,
+          value: {},
+          computed: '_computeParams(params)'
+        },
+      },
+      _computeParams: function(params) {
+        return {
+          RouteID: params.routeId,
+          Dir: 'Northbound'
+        };
+      },
+      handleRouteResponse: function(e) {
+        var object = e.detail.response.RecordSet;
+        if (object !== null) {
+          this.stops = object.Record;
+        }
+        else  {
+          this.stops = [];
+        }
+      }
+    });
+  </script>
+</dom-module>

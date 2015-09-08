@@ -14,6 +14,22 @@
     <leaflet-map fit-to-markers latitude="26.023679" longitude="-80.143186" zoom="10">
       <leaflet-tilelayer url="[[getTileLayerAddress()]]"></leaflet-tilelayer>
       <iron-ajax
+        id="busRouteAjax"
+        url=""
+        params=""
+        handle-as="json"
+        on-response="handleBusRouteAjaxResponse"
+        debounce-duration="300">
+      </iron-ajax>
+      <iron-ajax
+        id="ajax"
+        url=""
+        params=""
+        handle-as="json"
+        on-response="handleAjaxResponse"
+        debounce-duration="300">
+      </iron-ajax>
+      <iron-ajax
         auto
         url="http://miami-transit-api.herokuapp.com/api/Buses.json"
         handle-as="json"
@@ -82,6 +98,15 @@
           <b><span>[[trolley.MarkerID]]</span> <span>[[trolley.Direction]]</span> -  <span>[[trolley.Heading]]</span></b>
         </leaflet-marker>
       </template>
+      <template is="dom-repeat" items="{{busStops}}" as="busStop">
+        <leaflet-marker
+          latitude="[[busStop.Latitude]]"
+          longitude="[[busStop.Longitude]]"
+          title="[[busStop.StopName]]"
+          icon="busIcon">
+          <b><span>[[busStop.StopID]]</span> <span>[[busStop.StopName]]</span> -  <span>[[busStop.Sequence]]</span></b>
+        </leaflet-marker>
+      </template>
     </leaflet-map>
   </template>
 
@@ -100,10 +125,46 @@
         miamibeachtrolleys: {
           type: Array,
           value: []
+        },
+        busStops: {
+          type: Array,
+          value: []
         }
       },
       ready: function() {
-        //init();
+        this.sendBusRouteAjax();
+      },
+      sendBusRouteAjax: function() {
+        this.$.busRouteAjax.url='http://miami-transit-api.herokuapp.com/api/BusRoutes.json';
+        this.$.busRouteAjax.params='{}';
+        this.$.busRouteAjax.generateRequest();
+      },
+      handleBusRouteAjaxResponse: function(e) {
+        console.log(e.detail.response);
+        var object = e.detail.response.RecordSet;
+        if (object !== null) {
+          var route, url, params;
+          for (var i = 0; i < 1; i++) {
+            route = object.Record[i];
+            url = 'http://miami-transit-api.herokuapp.com/api/BusRouteStops.json';
+            params = {
+              RouteID: route.RouteID,
+              Dir: 'Northbound'
+            };
+            this.$.ajax.url=url;
+            this.$.ajax.params=params;
+            this.$.ajax.generateRequest();
+          }
+        }
+      },
+      handleAjaxResponse: function(e) {
+        console.log(e.detail.response);
+        var object = e.detail.response.RecordSet;
+        if (object !== null) {
+          for (var i = 0; i < object.Record.length; i++) {
+            this.push('busStops', object.Record[i])
+          }
+        }
       },
       handleBusesResponse: function(e) {
         var object = e.detail.response.RecordSet;
