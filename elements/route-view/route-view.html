@@ -4,7 +4,6 @@
 <link rel="import" href="../../bower_components/leaflet-map/leaflet-marker.html">
 <link rel="import" href="../../bower_components/leaflet-map/leaflet-popup.html">
 <link rel="import" href="../../bower_components/leaflet-map/leaflet-layer.html">
-<link rel="import" href="../../bower_components/more-routing/more-routing.html">
 <dom-module id="route-view">
   <style>
     leaflet-map {
@@ -12,7 +11,13 @@
     }
   </style>
   <template>
-    <more-route context name="routeview" params="{{params}}"></more-route>
+    <h1>Route View! <span>{{route}}</span></h1>
+    <leaflet-icon
+      id="busIcon"
+      icon-url="http://codeformiami.org/LeafletTransit/icons/icon-Bus-Tracker.png"
+      icon-anchor-x="22"
+      icon-anchor-y="22">
+    </leaflet-icon>
     <iron-ajax
       auto
       url="http://miami-transit-api.herokuapp.com/api/BusRouteStops.json"
@@ -21,7 +26,7 @@
       on-response="handleRouteResponse"
       debounce-duration="300">
     </iron-ajax>
-    <leaflet-map fit-to-markers latitude="26.023679" longitude="-80.143186" zoom="10">
+    <leaflet-map style="height:600px" fit-to-markers latitude="26.023679" longitude="-80.143186" zoom="10">
       <template is="dom-repeat" items="{{stops}}" as="busStop">
         <leaflet-marker
           latitude="[[busStop.Latitude]]"
@@ -38,15 +43,18 @@
     Polymer({
       is: "route-view",
       properties: {
+        route: {
+          type: String
+        },
         ajaxparams: {
           type: Object,
           value: {},
-          computed: '_computeParams(params)'
-        },
+          computed: '_computeParams(route)'
+        }
       },
-      _computeParams: function(params) {
+      _computeParams: function(route) {
         return {
-          RouteID: params.routeId,
+          RouteID: route,
           Dir: 'Northbound'
         };
       },

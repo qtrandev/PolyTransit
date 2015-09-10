@@ -4,79 +4,11 @@
     <meta charset="utf-8">
     <title>Miami Transit</title>
     <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
-    <link rel="import" href="elements/elements.html">
-    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="import" href="main-content.html">
   </head>
   <body>
-    <paper-drawer-panel id="drawerPanel">
-      <paper-header-panel drawer>
-        <paper-toolbar id="drawerToolbar">
-        </paper-toolbar>
-        <more-routing-config driver="hash"></more-routing-config>
-        <more-route name="home" path="/"></more-route>
-        <more-route name="about" path="/about"></more-route>
-        <more-route name="routes" path="/routes"></more-route>
-        <more-route name="routeview" path="/routes/:routeId"></more-route>
-        <template id="mainmenu" is="dom-bind">
-          <more-route-selector>
-            <paper-menu>
-              <paper-item route="home" paper-drawer-toggle>
-                <iron-icon icon="maps:directions-transit"></iron-icon>
-                <span>Map</span>
-              </paper-item>
-              <paper-item route="routes" paper-drawer-toggle>
-                <iron-icon icon="list"></iron-icon>
-                <span>Routes</span>
-              </paper-item>
-              <paper-item route="about" paper-drawer-toggle>
-                <iron-icon icon="info-outline"></iron-icon>
-                <span>About</span>
-              </paper-item>
-            </paper-menu>
-          </more-route-selector>
-        </template>
-      </paper-header-panel>
-      <paper-header-panel main>
-        <paper-toolbar id="topBar">
-          <paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
-          <iron-icon src="images/logo.png"></iron-icon>
-          <div class="title">Miami Transit</div>
-          <div class="flex"></div>
-          <paper-icon-button icon="search"></paper-icon-button>
-          <paper-icon-button icon="refresh"></paper-icon-button>
-          <paper-menu-button>
-            <paper-icon-button icon="more-vert" class="dropdown-trigger"></paper-icon-button>
-            <paper-menu class="dropdown-content">
-              <paper-item>About</paper-item>
-              <paper-item>Help</paper-item>
-            </paper-menu>
-          </paper-menu-button>
-        </paper-toolbar>
-        <div class="content">
-        <template id="transit" is="dom-bind">
-          <more-route-selector selectedParams="{{params}}">
-            <iron-pages>
-              <section route="home">
-                <h2>Map</h2>
-                <transit-map></transit-map>
-              </section>
-              <section route="routes">
-                <h2>Routes</h2>
-                <route-table></route-table>
-              </section>
-              <section route="routeview">
-                <h2>Route</h2>
-                <route-view></route-view>
-              </section>
-              <section route="about">
-                <h2>About</h2>
-                About section
-              </section>
-            </iron-pages>
-          </more-route-selector>
-        </template>
-        </div>
-      </paper-header-panel>
-    </paper-drawer-panel>
+    <template is="dom-bind">
+      <main-content></main-content>
+    </script>
   </body>
 </html>
