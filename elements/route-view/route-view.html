@@ -13,9 +13,11 @@
   <template>
     <h1>Route View! <span>{{route}}</span></h1>
     <leaflet-icon
-      id="busIcon"
-      icon-url="http://codeformiami.org/LeafletTransit/icons/icon-Bus-Tracker.png"
-      icon-anchor-x="22"
+      id="busStopIcon"
+      icon-url="http://codeformiami.org/LeafletTransit/icons/icon-Bus-Stop.png"
+      icon-width="22"
+      icon-height="22"
+      icon-anchor-x="11"
       icon-anchor-y="22">
     </leaflet-icon>
     <iron-ajax
@@ -32,7 +34,7 @@
           latitude="[[busStop.Latitude]]"
           longitude="[[busStop.Longitude]]"
           title="[[busStop.StopName]]"
-          icon="busIcon">
+          icon="busStopIcon">
           <b><span>[[busStop.Sequence]]</span> - <span>[[busStop.StopID]]</span>   <span>[[busStop.StopName]]</span></b>
         </leaflet-marker>
       </template>
