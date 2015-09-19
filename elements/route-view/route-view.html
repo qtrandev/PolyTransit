@@ -21,6 +21,19 @@
       icon-anchor-x="11"
       icon-anchor-y="22">
     </leaflet-icon>
+    <leaflet-icon
+      id="busIcon"
+      icon-url="http://codeformiami.org/LeafletTransit/icons/icon-Bus-Tracker.png"
+      icon-anchor-x="22"
+      icon-anchor-y="22">
+    </leaflet-icon>
+    <!-- Request live MDT bus locations and then show if match route -->
+    <iron-ajax
+      auto
+      url="http://miami-transit-api.herokuapp.com/api/Buses.json"
+      handle-as="json"
+      on-response="handleBusesResponse">
+    </iron-ajax>
     <iron-ajax
       auto
       url="http://miami-transit-api.herokuapp.com/api/BusRouteStops.json"
@@ -55,11 +68,21 @@
           <b><span>[[busStop.Sequence]]</span> - <span>[[busStop.StopID]]</span>   <span>[[busStop.StopName]]</span></b>
         </leaflet-marker>
       </template>
-      <!-- Use cirlce since leaflet-map polyline is not working -->
+      <!-- Use circle since leaflet-map polyline is not working -->
       <template is="dom-repeat" items="{{shapes}}" as="shape">
         <leaflet-circle latitude="[[shape.Latitude]]" longitude="[[shape.Longitude]]"
            radius="20" color="#0a0" fillColor="#aa0" fillOpacity="0.5" fill="true"
         </leaflet-circle>
+      </template>
+      <!-- Show live MDT buses match route if available -->
+      <template is="dom-repeat" items="{{buses}}" as="bus">
+        <leaflet-marker
+          latitude="[[bus.Latitude]]"
+          longitude="[[bus.Longitude]]"
+          title="[[bus.BusID]]"
+          icon="busIcon">
+          <b><span>[[bus.RouteID]]</span> <span>[[bus.ServiceDirection]]</span> - <span>[[bus.BusID]]</span> <span>[[bus.BusName]]</span></b>
+        </leaflet-marker>
       </template>
     </leaflet-map>
   </template>
@@ -83,6 +106,10 @@
           type: Object,
           value: {},
           computed: '_computeShapeIdParams(shapeId)'
+        },
+        buses: {
+          type: Array,
+          value: []
         }
       },
       _computeParams: function(route) {
@@ -115,6 +142,17 @@
         var object = e.detail.response.RecordSet;
         if (object !== null) {
           this.shapes = object.Record;
+        }
+      },
+      handleBusesResponse: function(e) {
+        var object = e.detail.response.RecordSet;
+        if (object !== null) {
+          this.buses = [];
+          for (var i = 0; i < object.Record.length; i++) {
+            if (this.route == object.Record[i].RouteID) {
+              this.push('buses', object.Record[i]);
+            }
+          }
         }
       }
     });
