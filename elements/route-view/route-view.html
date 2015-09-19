@@ -4,6 +4,7 @@
 <link rel="import" href="../../bower_components/leaflet-map/leaflet-marker.html">
 <link rel="import" href="../../bower_components/leaflet-map/leaflet-popup.html">
 <link rel="import" href="../../bower_components/leaflet-map/leaflet-layer.html">
+<link rel="import" href="../../bower_components/leaflet-map/leaflet-draw.html">
 <dom-module id="route-view">
   <style>
     leaflet-map {
@@ -28,6 +29,22 @@
       on-response="handleRouteResponse"
       debounce-duration="300">
     </iron-ajax>
+    <iron-ajax
+      auto
+      url="http://miami-transit-api.herokuapp.com/api/BusRouteShapesByRoute.json"
+      handle-as="json"
+      params={{ajaxparams}}
+      on-response="handleRouteShapeIdResponse"
+      debounce-duration="300">
+    </iron-ajax>
+    <iron-ajax
+      auto
+      url="http://miami-transit-api.herokuapp.com/api/BusRouteShape.json"
+      handle-as="json"
+      params={{shapeidparams}}
+      on-response="handleRouteShapeResponse"
+      debounce-duration="300">
+    </iron-ajax>
     <leaflet-map style="height:600px" fit-to-markers latitude="26.023679" longitude="-80.143186" zoom="10">
       <template is="dom-repeat" items="{{stops}}" as="busStop">
         <leaflet-marker
@@ -37,6 +54,12 @@
           icon="busStopIcon">
           <b><span>[[busStop.Sequence]]</span> - <span>[[busStop.StopID]]</span>   <span>[[busStop.StopName]]</span></b>
         </leaflet-marker>
+      </template>
+      <!-- Use cirlce since leaflet-map polyline is not working -->
+      <template is="dom-repeat" items="{{shapes}}" as="shape">
+        <leaflet-circle latitude="[[shape.Latitude]]" longitude="[[shape.Longitude]]"
+           radius="20" color="#0a0" fillColor="#aa0" fillOpacity="0.5" fill="true"
+        </leaflet-circle>
       </template>
     </leaflet-map>
   </template>
@@ -48,16 +71,29 @@
         route: {
           type: String
         },
+        shapeId: {
+          type: String
+        },
         ajaxparams: {
           type: Object,
           value: {},
           computed: '_computeParams(route)'
+        },
+        shapeidparams: {
+          type: Object,
+          value: {},
+          computed: '_computeShapeIdParams(shapeId)'
         }
       },
       _computeParams: function(route) {
         return {
           RouteID: route,
           Dir: 'Northbound'
+        };
+      },
+      _computeShapeIdParams: function(shapeId) {
+        return {
+          ShapeID: shapeId
         };
       },
       handleRouteResponse: function(e) {
@@ -67,6 +103,18 @@
         }
         else  {
           this.stops = [];
+        }
+      },
+      handleRouteShapeIdResponse: function(e) {
+        var object = e.detail.response.RecordSet;
+        if (object !== null) {
+          this.shapeId = object.Record.ShapeID;
+        }
+      },
+      handleRouteShapeResponse: function(e) {
+        var object = e.detail.response.RecordSet;
+        if (object !== null) {
+          this.shapes = object.Record;
         }
       }
     });
