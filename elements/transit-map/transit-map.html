@@ -43,6 +43,12 @@
         on-response="handleTrainsResponse"
         debounce-duration="300">
       </iron-ajax>
+      <iron-ajax
+        auto
+        url="http://miami-transit-api.herokuapp.com/api/TrainStations.json"
+        handle-as="json"
+        on-response="handleTrainStationsResponse">
+      </iron-ajax>
       <!--Not working - either need to make POST request or iron-ajax not good
       <iron-ajax
         auto
@@ -66,6 +72,14 @@
         icon-anchor-y="22">
       </leaflet-icon>
       <leaflet-icon
+        id="trainStationIcon"
+        icon-url="http://codeformiami.org/LeafletTransit/icons/icon-Rail-Station.png"
+        icon-width = "22"
+        icon-height = "22"
+        icon-anchor-x="11"
+        icon-anchor-y="11">
+      </leaflet-icon>
+      <leaflet-icon
         id="miamibeachtrolleyIcon"
         icon-url="http://codeformiami.org/LeafletTransit/icons/miamibeach-bus.png"
         icon-anchor-x="22"
@@ -87,6 +101,16 @@
           title="[[train.TrainID]]"
           icon="trainIcon">
           <b><span>[[train.LineID]]</span> <span>[[train.Service]]</span> -  <span>[[train.TrainID]]</span></b>
+        </leaflet-marker>
+      </template>
+      <template is="dom-repeat" items="{{trainStations}}" as="trainStation">
+        <leaflet-marker
+          latitude="[[trainStation.Latitude]]"
+          longitude="[[trainStation.Longitude]]"
+          title="[[trainStation.StationIDshow]]"
+          icon="trainStationIcon"
+          z-index-offset="-10">
+          <b><span>[[trainStation.StationIDshow]]</span> - <span>[[trainStation.Station]]</span> - <span>[[trainStation.Address]]</span></b>
         </leaflet-marker>
       </template>
       <template is="dom-repeat" items="{{miamibeachtrolleys}}" as="trolley">
@@ -182,6 +206,15 @@
         }
         else  {
           this.trains = [];
+        }
+      },
+      handleTrainStationsResponse: function(e) {
+        var object = e.detail.response.RecordSet;
+        if (object !== null) {
+          this.trainStations = object.Record;
+        }
+        else  {
+          this.trainStations = [];
         }
       },
       handleMiamiBeachTrolleysResponse: function(e) {
