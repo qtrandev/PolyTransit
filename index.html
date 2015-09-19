@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>Miami Transit</title>
     <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
-    <link rel="import" href="../../bower_components/polymer/polymer.html">
+    <link rel="import" href="bower_components/polymer/polymer.html">
     <link rel="import" href="elements/elements.html">
     <link rel="stylesheet" href="styles/styles.css">
   </head>
@@ -59,10 +59,10 @@
           </paper-toolbar>
           <div class="content">
             <app-router mode="hash">
-              <app-route path="/" import="/elements/transit-map/transit-map.html"></app-route>
-              <app-route path="/routes" import="/elements/route-table/route-table.html"></app-route>
-              <app-route path="/routes/:route" import="/elements/route-view/route-view.html"></app-route>
-              <app-route path="/about" import="/elements/route-view/route-view.html"></app-route>
+              <app-route path="/" import="elements/transit-map/transit-map.html"></app-route>
+              <app-route path="/routes" import="elements/route-table/route-table.html"></app-route>
+              <app-route path="/routes/:route" import="elements/route-view/route-view.html"></app-route>
+              <app-route path="/about" import="elements/route-view/route-view.html"></app-route>
             </app-router>
           </div>
         </paper-header-panel>
