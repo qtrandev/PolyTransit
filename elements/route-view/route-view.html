@@ -13,7 +13,11 @@
   </style>
   <template>
     <h1>Route View!</h1>
-    <h3>Route: <span>{{route}}</span> <span>{{direction}}</span></h3>
+    <h3>Route: <span>{{route}}</span> <span>{{direction}}</span>
+      <template is="dom-repeat" items="{{directionChoices}}" as="dir">
+        <button on-tap="buttonClicked">{{dir.Direction}}</button>
+      </template>
+    </h3>
     <leaflet-icon
       id="busStopIcon"
       icon-url="http://codeformiami.org/LeafletTransit/icons/icon-Bus-Stop.png"
@@ -72,7 +76,8 @@
           latitude="[[busStop.Latitude]]"
           longitude="[[busStop.Longitude]]"
           title="[[busStop.StopName]]"
-          icon="busStopIcon">
+          icon="busStopIcon"
+          z-index-offset="-100">
           <b><span>[[busStop.Sequence]]</span> - <span>[[busStop.StopID]]</span>   <span>[[busStop.StopName]]</span></b>
         </leaflet-marker>
       </template>
@@ -104,8 +109,7 @@
         },
         direction: {
           type: String,
-          value: 'Northbound',
-          computed: '_computeDirection(route,busRouteDirections)'
+          computed: '_computeDirection(busRouteDirections)'
         },
         shapeId: {
           type: String
@@ -140,14 +144,20 @@
           ShapeID: shapeId
         };
       },
-      _computeDirection: function(route,busRouteDirections) {
+      _computeDirection: function(busRouteDirections) {
+        this.directionChoices = [];
+        var foundDirection = 'Northbound'; // Default if not found
+        var matchedUserInput = false;
         for (var i = 0; i < busRouteDirections.length; i++) {
-          if (route == busRouteDirections[i].RouteID) {
-            // Return the first found direction for now
-            return busRouteDirections[i].Direction
+          if (this.route == busRouteDirections[i].RouteID) {
+            foundDirection = busRouteDirections[i].Direction; // Mark 1st found
+            this.push('directionChoices', busRouteDirections[i]);
+            if (foundDirection == this.direction) { // Matched user input
+              matchedUserInput = true;
+            }
           }
         }
-        return 'Northbound'; // Default return if not found
+        return matchedUserInput? this.direction:foundDirection;
       },
       handleRouteResponse: function(e) {
         var object = e.detail.response.RecordSet;
@@ -186,7 +196,10 @@
         if (object !== null) {
           this.busRouteDirections = object.Record;
         }
-      }
+      },
+      buttonClicked: function(e) {
+        this.direction = e.target.textContent;
+      },
     });
   </script>
 </dom-module>
