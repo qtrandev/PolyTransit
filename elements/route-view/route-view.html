@@ -12,7 +12,8 @@
     }
   </style>
   <template>
-    <h1>Route View! <span>{{route}}</span></h1>
+    <h1>Route View!</h1>
+    <h3>Route: <span>{{route}}</span> <span>{{direction}}</span></h3>
     <leaflet-icon
       id="busStopIcon"
       icon-url="http://codeformiami.org/LeafletTransit/icons/icon-Bus-Stop.png"
@@ -33,6 +34,13 @@
       url="http://miami-transit-api.herokuapp.com/api/Buses.json"
       handle-as="json"
       on-response="handleBusesResponse">
+    </iron-ajax>
+    <!-- Query directions for all routes for easy access -->
+    <iron-ajax
+      auto
+      url="http://miami-transit-api.herokuapp.com/api/BusRouteDirections.json"
+      handle-as="json"
+      on-response="handleBusRouteDirectionsResponse">
     </iron-ajax>
     <iron-ajax
       auto
@@ -94,13 +102,18 @@
         route: {
           type: String
         },
+        direction: {
+          type: String,
+          value: 'Northbound',
+          computed: '_computeDirection(route,busRouteDirections)'
+        },
         shapeId: {
           type: String
         },
         ajaxparams: {
           type: Object,
           value: {},
-          computed: '_computeParams(route)'
+          computed: '_computeParams(route,direction)'
         },
         shapeidparams: {
           type: Object,
@@ -110,18 +123,31 @@
         buses: {
           type: Array,
           value: []
+        },
+        busRouteDirections: {
+          type: Array,
+          value: []
         }
       },
-      _computeParams: function(route) {
+      _computeParams: function(route,direction) {
         return {
           RouteID: route,
-          Dir: 'Northbound'
+          Dir: direction
         };
       },
       _computeShapeIdParams: function(shapeId) {
         return {
           ShapeID: shapeId
         };
+      },
+      _computeDirection: function(route,busRouteDirections) {
+        for (var i = 0; i < busRouteDirections.length; i++) {
+          if (route == busRouteDirections[i].RouteID) {
+            // Return the first found direction for now
+            return busRouteDirections[i].Direction
+          }
+        }
+        return 'Northbound'; // Default return if not found
       },
       handleRouteResponse: function(e) {
         var object = e.detail.response.RecordSet;
@@ -153,6 +179,12 @@
               this.push('buses', object.Record[i]);
             }
           }
+        }
+      },
+      handleBusRouteDirectionsResponse: function(e) {
+        var object = e.detail.response.RecordSet;
+        if (object !== null) {
+          this.busRouteDirections = object.Record;
         }
       }
     });
