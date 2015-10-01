@@ -81,12 +81,12 @@
           <b><span>[[busStop.Sequence]]</span> - <span>[[busStop.StopID]]</span>   <span>[[busStop.StopName]]</span></b>
         </leaflet-marker>
       </template>
-      <!-- Use circle since leaflet-map polyline is not working -->
-      <template is="dom-repeat" items="{{shapes}}" as="shape">
-        <leaflet-circle latitude="[[shape.Latitude]]" longitude="[[shape.Longitude]]"
-           radius="20" color="#0a0" fillColor="#aa0" fillOpacity="0.5" fill="true"
-        </leaflet-circle>
-      </template>
+      <!-- Connect lines between route shape points -->
+      <leaflet-polyline>
+        <template is="dom-repeat" items="{{shapes}}" as="shape">
+            <leaflet-point latitude="[[shape.Latitude]]" longitude="[[shape.Longitude]]"> </leaflet-point>
+        </template>
+      </leaflet-polyline>
       <!-- Show live MDT buses match route if available -->
       <template is="dom-repeat" items="{{buses}}" as="bus">
         <leaflet-marker
